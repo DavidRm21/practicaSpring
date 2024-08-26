@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: dataservices
+
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:xe
+    username: C##DESARROLLO
+    password: admin
+    driver-class-name: oracle.jdbc.OracleDriver
+
+
+
+server:
+  port: 8001
+
+
