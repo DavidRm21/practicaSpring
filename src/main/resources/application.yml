@@ -8,7 +8,8 @@ spring:
     password: admin
     driver-class-name: oracle.jdbc.OracleDriver
 
-
+api:
+  xd: Hola
 
 server:
   port: 8001

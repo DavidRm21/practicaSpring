@@ -21,20 +21,24 @@ import java.util.UUID;
 @Component
 public class Aspectos {
 
+    private String correlationId;
+
     // Define un Pointcut para interceptar todos los métodos en controladores
     @Pointcut("execution(* com.prueba.dataservices.controller..*(..))")
-    public void controllerMethods() {}
+    public void controllerMethods() {
+
+    }
 
     // Antes de la ejecución del método
     @Before("controllerMethods()")
     public void before(JoinPoint joinPoint) {
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 
         log.info("Aspecto1");
         // Genera un ID de correlación si no está presente en la solicitud
-        String correlationId = request.getHeader("X-Correlation-Id");
+        correlationId = request.getHeader("X-Correlation-Id");
         if (correlationId == null) {
-            correlationId = UUID.randomUUID().toString();
+            correlationId = getCorrelationId();
         }
 
         // Log de información de la solicitud
@@ -55,10 +59,7 @@ public class Aspectos {
     public void afterReturning(JoinPoint joinPoint, ResponseEntity<?> response) {
         HttpServletResponse servletResponse = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
 
-        if (servletResponse != null) {
-            servletResponse.addHeader("X-Correlation-Id", getCorrelationId());
-        }
-        log.info("Aspecto2");
+        log.info("Aspecto2 {} ", correlationId);
 
         // Log de información de la respuesta
         System.out.println("Response Status: " + response.getStatusCode());
@@ -80,8 +81,6 @@ public class Aspectos {
     }
 
     private String getCorrelationId() {
-        // Lógica para obtener el ID de correlación del contexto
-        // Podrías usar algo como ThreadLocal para almacenar el ID de correlación
         log.info("Aspecto4");
         return UUID.randomUUID().toString(); // Ejemplo básico
     }
